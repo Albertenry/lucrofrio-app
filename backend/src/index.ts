@@ -19,14 +19,14 @@ const pool = new Pool({
 });
 
 // Health-check
-app.get("/health", (req, res) => {
+app.get("/health", (_req, res) => {
     res.send("OK");
 });
 
 // Rota de usuários: use app.get, não app.use
 app.get(
     "/users",
-    async (req: Request, res: Response, next: NextFunction) => {
+    async (_req: Request, res: Response, next: NextFunction) => {
         try {
             const result = await pool.query("SELECT * FROM usuarios;");
             res.json(result.rows);
@@ -38,7 +38,7 @@ app.get(
 
 // Error handler middleware
 app.use(
-    (err: Error, req: Request, res: Response, next: NextFunction) => {
+    (err: Error, _req: Request, res: Response, _next: NextFunction) => {
         console.error(err);
         res.status(500).json({ error: err.message });
     }

@@ -1,0 +1,12 @@
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/admin" element={<div>Painel do admin</div>} />
+    </Routes>
+  );
+}
