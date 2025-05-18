@@ -32,7 +32,7 @@ const Sidebar = ({ onLogout }: SidebarProps) => {
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 rounded-md bg-primary text-white"
+          className="p-2 rounded-md bg-[#0000ff] text-white"
         >
           {mobileOpen ? <FiX size={24} /> : <FiMenu size={24} />}
         </button>
@@ -86,7 +86,7 @@ const Sidebar = ({ onLogout }: SidebarProps) => {
                     to={item.path}
                     className={`flex items-center p-3 rounded-lg transition-colors
                               ${isActive(item.path) 
-                                ? 'bg-primary text-white' 
+                                ? 'bg-[#0000ff] text-white' 
                                 : 'text-gray-700 hover:bg-gray-100'}`}
                     onClick={() => setMobileOpen(false)}
                   >

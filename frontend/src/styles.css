@@ -1,0 +1,24 @@
+/* Estilos personalizados */
+.bg-primary {
+  background-color: #0000ff;
+}
+
+.text-primary {
+  color: #0000ff;
+}
+
+.border-primary {
+  border-color: #0000ff;
+}
+
+.hover\:bg-primary:hover {
+  background-color: #0000ff;
+}
+
+.hover\:text-primary:hover {
+  color: #0000ff;
+}
+
+.focus\:ring-primary:focus {
+  --tw-ring-color: #0000ff;
+}
