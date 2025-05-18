@@ -1,8 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Login from './pages/Login';
 import AdminDashboard from './pages/admin/Dashboard';
-import { useEffect, useState } from 'react';
 import type { JSX } from 'react/jsx-runtime';
+import Empresas from './pages/admin/Empresas';
+
 
 // Componente de proteção de rota
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -39,13 +41,19 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/admin/empresas" element={
+          <ProtectedRoute>
+            <Empresas />
+          </ProtectedRoute>
+        } />
         <Route path="/login" element={<Login />} />
         <Route path="/admin/dashboard" element={
           <ProtectedRoute>
             <AdminDashboard />
           </ProtectedRoute>
         } />
-        {/* Redireciona para login se a rota não for encontrada */}
+        {/* Adicione mais rotas protegidas aqui */}
+        <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
