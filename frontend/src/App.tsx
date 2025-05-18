@@ -2,9 +2,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useEffect, useState } from 'react';
 import Login from './pages/Login';
 import AdminDashboard from './pages/admin/Dashboard';
-import type { JSX } from 'react/jsx-runtime';
 import Empresas from './pages/admin/Empresas';
-
+import SupervisorDashboard from './pages/supervisor/Dashboard';
+import Tecnicos from './pages/supervisor/Tecnicos';
+import type { JSX } from 'react/jsx-runtime';
 
 // Componente de proteção de rota
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -41,19 +42,34 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/admin/empresas" element={
-          <ProtectedRoute>
-            <Empresas />
-          </ProtectedRoute>
-        } />
         <Route path="/login" element={<Login />} />
+
+        {/* Rotas do Administrador */}
         <Route path="/admin/dashboard" element={
           <ProtectedRoute>
             <AdminDashboard />
           </ProtectedRoute>
         } />
-        {/* Adicione mais rotas protegidas aqui */}
-        <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/admin/empresas" element={
+          <ProtectedRoute>
+            <Empresas />
+          </ProtectedRoute>
+        } />
+
+        {/* Rotas do Supervisor */}
+        <Route path="/supervisor/dashboard" element={
+          <ProtectedRoute>
+            <SupervisorDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/supervisor/tecnicos" element={
+          <ProtectedRoute>
+            <Tecnicos />
+          </ProtectedRoute>
+        } />
+
+        {/* Redireciona para login se a rota não for encontrada */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>

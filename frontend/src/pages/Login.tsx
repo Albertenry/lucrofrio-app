@@ -13,16 +13,23 @@ const Login = () => {
 
     const navigate = useNavigate();
 
+    // No componente Login, modifique a função handleLogin:
+
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
+
         // Simulação de login - em produção, conecte com seu backend
         if (email === 'albertenry2@gmail.com' && password === 'admin123') {
             localStorage.setItem('user', JSON.stringify({ email, role: 'admin' }));
             navigate('/admin/dashboard');
+        } else if (email === 'supervisor@lucrofrio.com' && password === 'supervisor123') {
+            localStorage.setItem('user', JSON.stringify({ email, role: 'supervisor' }));
+            navigate('/supervisor/dashboard');
         } else {
             setError('Credenciais inválidas. Tente novamente.');
         }
     };
+
 
     const handleRecovery = (e: React.FormEvent) => {
         e.preventDefault();
