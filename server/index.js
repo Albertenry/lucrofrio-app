@@ -1,43 +1,32 @@
-import express, { json } from 'express';
+import express from 'express';
 import cors from 'cors';
-import { query } from './config/db';
+import dotenv from 'dotenv';
+import authRoutes from './routes/authRoutes.js'; // Certifique-se que esse caminho está correto
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Configurações de caminho para compatibilidade com ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Middlewares
 app.use(cors());
-app.use(json());
+app.use(express.json());
 
-// Rota de teste
+// Rotas da API
+app.use('/api', authRoutes);
+
+// Teste de rota base
 app.get('/', (_req, res) => {
-    res.json({ message: 'API do Lucrofrio Manager funcionando!' });
+  res.send('API Lucrofrio está rodando!');
 });
 
-// Rota de login
-app.post('/api/login', async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        const result = await query(
-            'SELECT u.id, u.nome_completo, u.email, u.funcao, e.id as empresa_id, e.nome as empresa_nome FROM usuarios u JOIN empresas e ON u.empresa_id = e.id WHERE u.email = $1 AND u.senha = $2',
-            [email, password]
-        );
-
-        if (result.rows.length > 0) {
-            // Não envie a senha de volta
-            const user = result.rows[0];
-            res.json({ success: true, user });
-        } else {
-            res.status(401).json({ success: false, message: 'Credenciais inválidas' });
-        }
-    } catch (error) {
-        console.error('Erro ao fazer login:', error);
-        res.status(500).json({ success: false, message: 'Erro no servidor' });
-    }
-});
-
-// Inicia o servidor
+// Inicialização do servidor
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });

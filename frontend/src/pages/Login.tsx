@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.png'; // Adicione seu logo na pasta assets
+import logo from '../assets/logo.png';
 
 const Login = () => {
-    const [email, setEmail] = useState('albertenry2@gmail.com');
+    const [email, setEmail] = useState('albertenry3@gmail.com'); // exemplo de usuário existente
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(true);
     const [error, setError] = useState('');
@@ -13,29 +13,44 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    // No componente Login, modifique a função handleLogin:
-
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError('');
 
-        // Simulação de login - em produção, conecte com seu backend
-        if (email === 'albertenry2@gmail.com' && password === 'admin123') {
-            localStorage.setItem('user', JSON.stringify({ email, role: 'admin' }));
-            navigate('/admin/dashboard');
-        } else if (email === 'supervisor@lucrofrio.com' && password === 'supervisor123') {
-            localStorage.setItem('user', JSON.stringify({ email, role: 'supervisor' }));
-            navigate('/supervisor/dashboard');
-        } else {
-            setError('Credenciais inválidas. Tente novamente.');
+        try {
+            const response = await fetch('http://localhost:5000/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }), // ✅ corrigido aqui
+            });
+
+            if (!response.ok) {
+                throw new Error('Credenciais inválidas');
+            }
+
+            const { token, usuario } = await response.json();
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(usuario));
+
+            // 🔐 Redirecionamento conforme a função (não 'role', e sim 'funcao')
+            if (usuario.funcao === 'admin') {
+                navigate('/admin/dashboard');
+            } else if (usuario.funcao === 'supervisor') {
+                navigate('/supervisor/dashboard');
+            } else if (usuario.funcao === 'tecnico') {
+                navigate('/tecnico/dashboard');
+            } else {
+                setError('Perfil não reconhecido.');
+            }
+        } catch (err) {
+            setError('Erro no login: ' + (err as Error).message);
         }
     };
 
-
     const handleRecovery = (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulação de recuperação - em produção, conecte com seu backend
         setRecoverySuccess(true);
-        // Aqui você implementaria o envio de email real
     };
 
     if (isRecovering) {
@@ -54,7 +69,7 @@ const Login = () => {
                             </div>
                             <button
                                 onClick={() => { setIsRecovering(false); setRecoverySuccess(false); }}
-                                className="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300"
+                                className="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300"
                             >
                                 Voltar ao Login
                             </button>
@@ -62,7 +77,7 @@ const Login = () => {
                     ) : (
                         <form onSubmit={handleRecovery}>
                             <div className="mb-6">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="recovery-email">
+                                <label htmlFor="recovery-email" className="block text-gray-700 text-sm font-bold mb-2">
                                     Email
                                 </label>
                                 <input
@@ -75,7 +90,6 @@ const Login = () => {
                                     required
                                 />
                             </div>
-
                             <div className="flex items-center justify-between mb-6">
                                 <button
                                     type="button"
@@ -86,7 +100,7 @@ const Login = () => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300"
+                                    className="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
                                 >
                                     Enviar Instruções
                                 </button>
@@ -121,7 +135,7 @@ const Login = () => {
 
                 <form onSubmit={handleLogin}>
                     <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                        <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
                             Email
                         </label>
                         <input
@@ -136,7 +150,7 @@ const Login = () => {
                     </div>
 
                     <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                        <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
                             Senha
                         </label>
                         <input
@@ -157,9 +171,9 @@ const Login = () => {
                                 type="checkbox"
                                 checked={rememberMe}
                                 onChange={(e) => setRememberMe(e.target.checked)}
-                                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                                className="h-4 w-4 text-primary border-gray-300 rounded"
                             />
-                            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                            <label htmlFor="remember-me" className="ml-2 text-sm text-gray-700">
                                 Lembrar-me
                             </label>
                         </div>
@@ -175,7 +189,7 @@ const Login = () => {
                     <div className="mb-6">
                         <button
                             type="submit"
-                            className="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300"
+                            className="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300"
                         >
                             Entrar
                         </button>
