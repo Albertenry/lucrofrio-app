@@ -1,36 +1,45 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import type { JSX } from 'react/jsx-runtime'; // Importante: incluir este import
+import type { JSX } from 'react/jsx-runtime';
+
+// Página de login
 import Login from './pages/Login';
+
+// Área do Administrador
 import AdminDashboard from './pages/admin/Dashboard';
 import Empresas from './pages/admin/Empresas';
+
+// Área do Supervisor
 import SupervisorDashboard from './pages/supervisor/Dashboard';
 import Tecnicos from './pages/supervisor/Tecnicos';
 import Clientes from './pages/supervisor/Clientes';
 import Ordens from './pages/supervisor/Ordens';
 import Solicitacoes from './pages/supervisor/Solicitacoes';
 
-// Componente de proteção de rota
+// Área do Técnico
+import TecnicoLayout from './components/tecnico/TecnicoLayout';
+import TecnicoDashboard from './pages/tecnico/Dashboard';
+import Deslocamento from './pages/tecnico/Deslocamento';
+import AssistenteIA from './pages/tecnico/Assistente';
+import Materiais from './pages/tecnico/Materiais';
+import Avaliacao from './pages/tecnico/Avaliacao';
+
+// Rota protegida
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const user = localStorage.getItem('user');
-  
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-  
-  return children;
+  return user ? children : <Navigate to="/login" replace />;
 };
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
-  
+
   useEffect(() => {
     // Simulação de carregamento inicial
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
   }, []);
-  
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -45,9 +54,10 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Login */}
         <Route path="/login" element={<Login />} />
-        
-        {/* Rotas do Administrador */}
+
+        {/* Área do Administrador */}
         <Route path="/admin/dashboard" element={
           <ProtectedRoute>
             <AdminDashboard />
@@ -58,8 +68,8 @@ function App() {
             <Empresas />
           </ProtectedRoute>
         } />
-        
-        {/* Rotas do Supervisor */}
+
+        {/* Área do Supervisor */}
         <Route path="/supervisor/dashboard" element={
           <ProtectedRoute>
             <SupervisorDashboard />
@@ -85,8 +95,22 @@ function App() {
             <Solicitacoes />
           </ProtectedRoute>
         } />
-        
-        {/* Redireciona para login se a rota não for encontrada */}
+
+        {/* Área do Técnico com layout e rotas filhas */}
+        <Route path="/tecnico" element={
+          <ProtectedRoute>
+            <TecnicoLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Navigate to="/tecnico/dashboard" replace />} />
+          <Route path="dashboard" element={<TecnicoDashboard />} />
+          <Route path="deslocamento" element={<Deslocamento />} />
+          <Route path="assistente" element={<AssistenteIA />} />
+          <Route path="materiais" element={<Materiais />} />
+          <Route path="avaliacao" element={<Avaliacao />} />
+        </Route>
+
+        {/* Redirecionamento padrão */}
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

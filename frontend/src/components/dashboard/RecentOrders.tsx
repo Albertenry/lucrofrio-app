@@ -22,7 +22,7 @@ const RecentOrders = () => {
         return 'bg-gray-100 text-gray-800';
     }
   };
-  
+
   const getStatusClass = (status: string) => {
     switch (status.toLowerCase()) {
       case 'concluído':
@@ -35,13 +35,13 @@ const RecentOrders = () => {
         return 'bg-gray-100 text-gray-800';
     }
   };
-  
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <div className="p-6 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-800">Ordens Recentes</h3>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">

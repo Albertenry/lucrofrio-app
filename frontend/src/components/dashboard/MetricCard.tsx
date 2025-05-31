@@ -23,7 +23,7 @@ const MetricCard = ({ title, value, icon, trend, color = 'primary' }: MetricCard
           {icon}
         </div>
       </div>
-      
+
       {trend && (
         <div className="mt-2 flex items-center">
           <span className={trend.isPositive ? 'text-green-500' : 'text-red-500'}>

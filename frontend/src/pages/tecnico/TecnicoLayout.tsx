@@ -1,10 +1,14 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import Sidebar from '@/components/Sidebar'
+import { authService } from '@/services/api'
 
 const TecnicoLayout = () => {
+  const navigate = useNavigate();
+  
   const handleLogout = () => {
-    // TODO: Adicione aqui a lógica de logout (como limpar tokens, redirecionar, etc.)
-    console.log('Logout do técnico')
+    // Implementação da lógica de logout
+    authService.logout();
+    navigate('/login');
   }
 
   const tecnicoMenuItems = [

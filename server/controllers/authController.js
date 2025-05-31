@@ -9,10 +9,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
 
 // LOGIN
 export const login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, senha } = req.body;
 
-    // Validação básica
-    if (!email || !password) {
+    if (!email || !senha) {
         return res.status(400).json({ message: 'Email e senha são obrigatórios.' });
     }
 
@@ -31,11 +30,7 @@ export const login = async (req, res) => {
 
         const user = result.rows[0];
 
-        if (!user.senha) {
-            return res.status(500).json({ message: 'Senha não encontrada no banco de dados.' });
-        }
-
-        const senhaValida = await bcrypt.compare(password, user.senha);
+        const senhaValida = await bcrypt.compare(senha, user.senha);
         if (!senhaValida) {
             return res.status(401).json({ message: 'Senha incorreta' });
         }
@@ -46,7 +41,7 @@ export const login = async (req, res) => {
             { expiresIn: '8h' }
         );
 
-        delete user.senha; // remove a senha antes de retornar o usuário
+        delete user.senha;
 
         res.json({ token, user });
     } catch (err) {
