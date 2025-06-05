@@ -1,8 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react/jsx-runtime';
+import Usuarios from './pages/admin/Usuarios';
 
-// Página de login
+
+// Páginas públicas
 import Login from './pages/Login';
 
 // Área do Administrador
@@ -24,7 +26,7 @@ import AssistenteIA from './pages/tecnico/Assistente';
 import Materiais from './pages/tecnico/Materiais';
 import Avaliacao from './pages/tecnico/Avaliacao';
 
-// Rota protegida
+// Componente de Rota Protegida
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const user = localStorage.getItem('user');
   return user ? children : <Navigate to="/login" replace />;
@@ -35,9 +37,8 @@ function App() {
 
   useEffect(() => {
     // Simulação de carregamento inicial
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
   }, []);
 
   if (isLoading) {
@@ -54,54 +55,85 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Login */}
+        {/* Página de Login */}
         <Route path="/login" element={<Login />} />
 
-        {/* Área do Administrador */}
-        <Route path="/admin/dashboard" element={
-          <ProtectedRoute>
-            <AdminDashboard />
-          </ProtectedRoute>
-        } />
-        <Route path="/admin/empresas" element={
-          <ProtectedRoute>
-            <Empresas />
-          </ProtectedRoute>
-        } />
+        {/* Rotas do Admin */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/empresas"
+          element={
+            <ProtectedRoute>
+              <Empresas />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/Usuarios"
+          element={
+            <ProtectedRoute>
+              <Usuarios />
+            </ProtectedRoute>
+          } />
 
-        {/* Área do Supervisor */}
-        <Route path="/supervisor/dashboard" element={
-          <ProtectedRoute>
-            <SupervisorDashboard />
-          </ProtectedRoute>
-        } />
-        <Route path="/supervisor/tecnicos" element={
-          <ProtectedRoute>
-            <Tecnicos />
-          </ProtectedRoute>
-        } />
-        <Route path="/supervisor/clientes" element={
-          <ProtectedRoute>
-            <Clientes />
-          </ProtectedRoute>
-        } />
-        <Route path="/supervisor/ordens" element={
-          <ProtectedRoute>
-            <Ordens />
-          </ProtectedRoute>
-        } />
-        <Route path="/supervisor/solicitacoes" element={
-          <ProtectedRoute>
-            <Solicitacoes />
-          </ProtectedRoute>
-        } />
+        {/* Rotas do Supervisor */}
+        <Route
+          path="/supervisor/dashboard"
+          element={
+            <ProtectedRoute>
+              <SupervisorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/supervisor/tecnicos"
+          element={
+            <ProtectedRoute>
+              <Tecnicos />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/supervisor/clientes"
+          element={
+            <ProtectedRoute>
+              <Clientes />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/supervisor/ordens"
+          element={
+            <ProtectedRoute>
+              <Ordens />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/supervisor/solicitacoes"
+          element={
+            <ProtectedRoute>
+              <Solicitacoes />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Área do Técnico com layout e rotas filhas */}
-        <Route path="/tecnico" element={
-          <ProtectedRoute>
-            <TecnicoLayout />
-          </ProtectedRoute>
-        }>
+        {/* Rotas do Técnico com layout e aninhamento */}
+        <Route
+          path="/tecnico"
+          element={
+            <ProtectedRoute>
+              <TecnicoLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Navigate to="/tecnico/dashboard" replace />} />
           <Route path="dashboard" element={<TecnicoDashboard />} />
           <Route path="deslocamento" element={<Deslocamento />} />
